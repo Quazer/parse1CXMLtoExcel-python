@@ -10,7 +10,7 @@
     parseXML1CtoExcel.exe [-h] [--cache CACHE_FILE] input_file output_dir
     
     обязательные аргументы:
-      input_file          выгруженный XML файл
+      input_file          выгруженный обработчиком "Выгрузка и загрузка в XML" xml-файл
       output_dir          выходная папка
     
     необязательные аргументы:
