@@ -5,7 +5,7 @@
 * Справочники
 * Регистры сведений 
 
-# Использование
+## Использование
 
     parseXML1CtoExcel.exe [-h] [--cache CACHE_FILE] input_file output_dir
     
