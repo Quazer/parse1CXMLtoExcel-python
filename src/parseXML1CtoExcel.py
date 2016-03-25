@@ -3,9 +3,7 @@ import argparse
 import pickle
 import re
 import xml.sax
-import hashlib
 
-# import redis
 import xlsxwriter
 
 
@@ -16,27 +14,36 @@ class MyHandler(xml.sax.ContentHandler):
         self.data = {}
         self.itemName = ''
         self.item = {}
-        self.currentTag = ''
+        self.tagName = ''
+        # 'InformationRegisterRecordSet', 'CatalogObject'
+        self.tagType = ''
+        self.lastTagType = ''
 
     def startElement(self, tag, attributes):
         self.cnt += 1
-        if self.cnt % 4096 == 0: print(self.cnt)
+        if self.cnt % 8192 == 0: print(self.cnt)
 
         self.tags.append(tag)
 
         if len(self.tags) == 3:
             self.itemName = tag
             self.item = {}
-            self.currentTag = ''
-            pass
-        elif len(self.tags) == 4:
-            self.currentTag = tag
+            self.tagName = ''
+            self.tagType = ''
+            m = re.search("^(\\w+)[.]", tag)
+            if m.group(1) is not None:
+                self.tagType = m.group(1)
+        elif self.tagType == 'CatalogObject' and len(self.tags) == 4:
+            self.tagName = tag
+        elif self.tagType == 'InformationRegisterRecordSet' and len(self.tags) == 6:
+            self.tagName = tag
 
     def endElement(self, tag):
         self.tags.pop()
         if len(self.tags) == 2:
             if self.itemName not in self.data.keys(): self.data[self.itemName] = []
             self.data[self.itemName].append(dict(self.item))
+            self.tagType = ''
 
     @staticmethod
     def normalizeString(x):
@@ -45,9 +52,9 @@ class MyHandler(xml.sax.ContentHandler):
         return x
 
     def characters(self, content):
-        if self.currentTag != '':
-            if self.currentTag not in self.item.keys(): self.item[self.currentTag] = ''
-            self.item[self.currentTag] += self.normalizeString(content)
+        if self.tagType != '':
+            if self.tagName not in self.item.keys(): self.item[self.tagName] = ''
+            self.item[self.tagName] += self.normalizeString(content)
 
 
 if __name__ == "__main__":
