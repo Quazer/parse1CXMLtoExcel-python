@@ -7,13 +7,13 @@
 
 # Использование
 
-    usage: parseXML1CtoExcel.exe [-h] [--cache CACHE_FILE] input_file output_dir
+    parseXML1CtoExcel.exe [-h] [--cache CACHE_FILE] input_file output_dir
     
-    positional arguments:
+    обязательные аргументы:
       input_file          выгруженный XML файл
       output_dir          выходная папка
     
-    optional arguments:
+    необязательные аргументы:
       -h, --help          показать помощь
       --cache CACHE_FILE  файл для создания кэша
 
